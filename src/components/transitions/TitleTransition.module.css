@@ -1,0 +1,10 @@
+.enter {
+    transform: translateY(-70%);
+    opacity: 0;
+}
+
+.enterActive {
+    transform: translateY(0%);
+    opacity: 1;
+    transition: opacity 500ms ease-in-out, transform 700ms ease-in-out;
+}

@@ -1,0 +1,17 @@
+.NotificationBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 320px;
+    height: 60px;
+    border: 3px solid #333;
+    border-radius: 2% 6% 5% 4%/1% 1% 2% 4%;
+    box-shadow: 4px 2px 2px #333;
+    background-color: #ffffff;
+}
+
+.NotificationMessage {
+    font-size: 20px;
+    color: #9e1010;
+}

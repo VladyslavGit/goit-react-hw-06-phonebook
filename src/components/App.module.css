@@ -1,0 +1,32 @@
+body {
+    background-color: rgb(172, 172, 172);
+}
+
+.formBox {
+    width: 360px;
+    text-align: left;
+    padding: 1rem 2rem;
+    border: 3px solid #333;
+    border-radius: 2% 6% 5% 4%/1% 1% 2% 4%;
+    margin: 20px auto 0;
+    box-shadow: 4px 2px 2px #333;
+    background-color: white;
+}
+
+.title {
+    font-size: 30px;
+    text-align: center;
+    margin: 0;
+    padding-top: 20px;
+}
+
+.notificationBox {
+    position: absolute;
+    top: 40px;
+    left: 50%;
+    transform: translate(-50%, 0%);
+}
+
+.paragraf {
+    margin-bottom: 10px;
+}
