@@ -9,55 +9,55 @@ import FilterTransition from "./transitions/FilterTransition.module.css";
 import NotificationTransition from "./transitions/NotificationTransition.module.css";
 import Notification from "./notification/Notification";
 import titleContactTransition from "./transitions/ContactTitleTransition.module.css";
+import { connect } from "react-redux";
+import { getFilterQuery, addContact } from "../redux/actions";
 
 class App extends Component {
   state = {
-    contacts: [],
+    // contacts: [],
     filter: "",
     mainTitle: false,
     notification: false,
   };
 
   componentDidMount() {
-    const contacts =
-      localStorage.getItem("contacts") !== null
-        ? JSON.parse(localStorage.getItem("contacts"))
-        : [];
-    this.setState({ contacts, mainTitle: true });
+    // const contacts =
+    //   localStorage.getItem("contacts") !== null
+    //     ? JSON.parse(localStorage.getItem("contacts"))
+    //     : [];
+    this.setState({ mainTitle: true });
   }
 
-  componentDidUpdate() {
-    localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
-  }
+  // componentDidUpdate() {
+  //   localStorage.setItem("contacts", JSON.stringify(this.state.contacts));
+  // }
 
   submitContact = (data) => {
-    const isPersonExist = this.state.contacts.find(
-      (person) => person.name === data.name
+    const isPersonExist = this.props.contacts.find(
+      (contact) => contact.name === data.name
     );
     !isPersonExist
-      ? this.setState((prevstate) => ({
-          contacts: [...prevstate.contacts, data],
-        }))
+      ? this.props.addContact(data)
       : this.setState({ notification: true });
     setTimeout(() => this.setState({ notification: false }), 2000);
   };
 
-  deleteContact = (e) => {
-    const id = e.target.id;
-    this.setState((prevstate) => ({
-      contacts: prevstate.contacts.filter((contact) => contact.id !== id),
-    }));
-  };
+  // deleteContact = (e) => {
+  //   const id = e.target.id;
+  //   this.setState((prevstate) => ({
+  //     contacts: prevstate.contacts.filter((contact) => contact.id !== id),
+  //   }));
+  // };
 
-  getName = (e) => {
-    this.setState({
-      filter: e.target.value,
-    });
-  };
+  // getName = (e) => {
+  //   this.setState({
+  //     filter: e.target.value,
+  //   });
+  // };
 
-  filterContacts = () => {
-    return this.state.contacts.filter((contact) =>
-      contact.name.toLowerCase().includes(this.state.filter.toLowerCase())
+  filterContact = (data) => {
+    return data.filter((contact) =>
+      contact.name.toLowerCase().includes(this.props.filter_query.toLowerCase())
     );
   };
 
@@ -74,7 +74,7 @@ class App extends Component {
         </CSSTransition>
         <ContactForm submitContact={this.submitContact} />
         <CSSTransition
-          in={this.state.contacts.length > 0}
+          in={this.props.contacts.length > 0}
           timeout={700}
           unmountOnExit
           classNames={titleContactTransition}
@@ -82,16 +82,19 @@ class App extends Component {
           <h2 className={styles.paragraf}>Contacts</h2>
         </CSSTransition>
         <CSSTransition
-          in={this.state.contacts.length > 1}
+          in={this.props.contacts.length > 1}
           timeout={700}
           classNames={FilterTransition}
           unmountOnExit
         >
-          <Filter getName={this.getName} />
+          <Filter />
         </CSSTransition>
         <ContactList
-          contacts={this.filterContacts()}
-          deleteContact={this.deleteContact}
+          contacts={
+            this.props.filter_query === ""
+              ? this.props.contacts
+              : this.filterContact(this.props.contacts)
+          }
         />
         <CSSTransition
           in={this.state.notification}
@@ -108,4 +111,15 @@ class App extends Component {
   }
 }
 
-export default App;
+App.defaultProps = {
+  contacts: [],
+};
+
+const mapSTP = (state) => {
+  return {
+    contacts: state.contacts.contacts,
+    filter_query: state.contacts.filter_query,
+  };
+};
+
+export default connect(mapSTP, { getFilterQuery, addContact })(App);
